@@ -2,9 +2,21 @@ const { sequelize } = require("./db");
 const { Product } = require("./models/product");
 
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
+// Validate and connect to the database
+sequelize
+  .authenticate()
+  .then(() =>
+    app.listen(8000, () => {
+      console.log("Successfully connected to the database!");
+    })
+  )
+  .catch((error) => console.log("Failed to connect the database:", error));
 
 app.get("/", async function (req, res) {
   sequelize
@@ -22,29 +34,15 @@ app.get("/", async function (req, res) {
 });
 
 app.post("/", async function (req, res) {
+  const { category, name, price, quantity } = req.body;
   sequelize
     .sync()
     .then(async () => {
       // Insert new row using `create()` method
-      await Product.create({
-        name: "Eclairs",
-        category: "Chocolates",
-        quantity: 100,
-        price: 5,
-      });
+      await Product.create({ category, name, price, quantity });
       console.log("Successfully added a new product!");
     })
     .catch((error) =>
       console.log("Failed to synchronize with the database:", error)
     );
 });
-
-// Validate and connect to the database
-sequelize
-  .authenticate()
-  .then(() =>
-    app.listen(8000, () => {
-      console.log("Successfully connected to the database!");
-    })
-  )
-  .catch((error) => console.log("Failed to connect the database:", error));
