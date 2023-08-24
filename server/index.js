@@ -46,3 +46,31 @@ app.post("/", async function (req, res) {
       console.log("Failed to synchronize with the database:", error)
     );
 });
+
+app.patch("/:id", async function (req, res) {
+  const { quantity: toDecrease } = req.body;
+  const { id } = req.params;
+  sequelize
+    .sync()
+    .then(async () => {
+      // Insert new row using `create()` method
+      const product = await Product.findByPk(id);
+      await Product.update(
+        {
+          quantity:
+            product.quantity - toDecrease < 0
+              ? 0
+              : product.quantity - toDecrease,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+      console.log("Successfully added a new product!");
+    })
+    .catch((error) =>
+      console.log("Failed to synchronize with the database:", error)
+    );
+});

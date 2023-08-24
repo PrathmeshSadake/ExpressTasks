@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createProduct, getProducts } from "../api";
 import { useState } from "react";
+import TableRow from "./TableRow";
 
 function Products() {
   const [name, setname] = useState("");
@@ -115,31 +116,7 @@ function Products() {
           </thead>
           <tbody className='divide-y divide-gray-200 bg-white'>
             {data.map((product) => (
-              <tr key={product.id}>
-                <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6'>
-                  {product.name}
-                </td>
-                <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
-                  {product.price}
-                </td>
-                <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
-                  {product.category}
-                </td>
-                <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
-                  {product.quantity}
-                </td>
-                <td className='flex space-x-1 relative whitespace-nowrap py-4 text-sm font-medium'>
-                  <button className='py-1 px-2 bg-indigo-500 text-white'>
-                    Buy 1
-                  </button>
-                  <button className='py-1 px-2 bg-indigo-500 text-white'>
-                    Buy 2
-                  </button>
-                  <button className='py-1 px-2 bg-indigo-500 text-white'>
-                    Buy 3
-                  </button>
-                </td>
-              </tr>
+              <TableRow key={product.id} product={product} />
             ))}
           </tbody>
         </table>
